@@ -25,8 +25,3 @@ const PaperIdModel =
   mongoose.model<PaperId>('PaperId', PaperIdSchema);
 
 export default PaperIdModel;
-
-// conferenceIdNumber:{
-//     type:Number,
-//     default:0
-// }

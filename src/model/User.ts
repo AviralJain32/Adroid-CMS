@@ -70,16 +70,6 @@ const UserSchema: Schema<User> = new Schema(
       type: Boolean,
       default: true,
     },
-    // Organizedconferences:[{
-    //     type:mongoose.Schema.Types.ObjectId,
-    //     ref:"Conference"
-    // }],
-    // submittedPapers:[
-    //     {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Paper'
-    //     }
-    // ]
   },
   { timestamps: true },
 );

@@ -19,8 +19,6 @@ export interface IPaper extends Document {
   paperStatus: 'submitted' | 'accepted' | 'rejected' | 'review';
   paperID: string;
   paperCommentHistory: { comment: string; updatedAt: Date }[];
-  // paperReview1History: { review: string; updatedAt: Date }[];
-  // paperReview2History: { review: string; updatedAt: Date }[];
   reviewers: {
     Id: mongoose.Types.ObjectId;
     status: 'review' | 'accepted' | 'rejected';
@@ -105,29 +103,12 @@ const PaperSchema: Schema<IPaper> = new Schema(
       type: String,
       required: true,
     },
-    // paperComment: {
-    //   type: String
-    // },
     paperCommentHistory: [
       {
         comment: String,
         updatedAt: { type: Date, default: Date.now },
       },
     ],
-    // Array to store the history of paperReview1 with timestamps
-    // paperReview1History: [
-    //   {
-    //     review: String,
-    //     updatedAt: { type: Date, default: Date.now },
-    //   },
-    // ],
-    // // Array to store the history of paperReview2 with timestamps
-    // paperReview2History: [
-    //   {
-    //     review: String,
-    //     updatedAt: { type: Date, default: Date.now },
-    //   },
-    // ],
     reviewers: [
       {
         Id: {

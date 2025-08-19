@@ -23,8 +23,6 @@ export async function PATCH(request: Request) {
     const { comment, status, paperID, authorEmails, conferenceAcronmym } =
       await request.json();
 
-    console.log(authorEmails);
-
     if (!comment || !paperID) {
       return new Response(
         JSON.stringify({

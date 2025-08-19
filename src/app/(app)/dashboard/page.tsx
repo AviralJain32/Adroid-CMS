@@ -23,6 +23,7 @@ import { useSession } from 'next-auth/react';
 import EditConferencePopup from './EditConferencePopup';
 import EditPopup from './EditPopup';
 
+
 // Organized Conferences Component
 const OrganizedConferenceComponent = () => {
   const { data: organizedConferences, isLoading } =
@@ -53,7 +54,7 @@ const OrganizedConferenceComponent = () => {
                 <TableCell colSpan={4} className="text-center">
                   Loading <PulseLoader size={6} />
                 </TableCell>
-              </TableRow>
+              </TableRow>    
             ) : organizedConferences && organizedConferences?.length > 0 ? (
               organizedConferences.filter((conference)=>conference.conferenceCategory=="Conference").map((conference: any) => (
                 <TableRow key={conference._id}>
@@ -160,6 +161,76 @@ const OrganizedConferenceComponent = () => {
     </Card>
   );
 };
+
+// const OrganizedConferenceComponent = () => {
+//   const { data: organizedConferences, isLoading } = useGetOrganizedConferencesQuery();
+//   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
+
+//   const filteredConferences = organizedConferences
+//     ? organizedConferences.filter(c => c.conferenceCategory === selectedCategory)
+//     : [];
+
+//   // Columns for current category
+//   const columns = CATEGORY_CONFIGS[selectedCategory];
+
+//   return (
+//     <Card>
+//       <CardHeader>
+//         <CardTitle>Organized {`${selectedCategory}`}</CardTitle>
+//       </CardHeader>
+//       <CardContent>
+//         <div className="mb-4 flex flex-row items-center gap-3 justify-end">
+//           <span className="font-medium">Filter by Category:</span>
+//           <Select
+//             value={selectedCategory}
+//             onValueChange={setSelectedCategory}
+//           >
+//             <SelectTrigger className="w-[260px]">
+//               <SelectValue />
+//             </SelectTrigger>
+//             <SelectContent>
+//               {CATEGORIES.map(cat => (
+//                 <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+//               ))}
+//             </SelectContent>
+//           </Select>
+//         </div>
+//         <Table>
+//           <TableHeader>
+//             <TableRow>
+//               {columns.map(col => (
+//                 <TableHead key={col.label}>{col.label}</TableHead>
+//               ))}
+//             </TableRow>
+//           </TableHeader>
+//           <TableBody>
+//             {isLoading ? (
+//               <TableRow>
+//                 <TableCell colSpan={columns.length} className="text-center">
+//                   Loading <PulseLoader size={6} />
+//                 </TableCell>
+//               </TableRow>
+//             ) : filteredConferences.length > 0 ? (
+//               filteredConferences.map(c => (
+//                 <TableRow key={c._id}>
+//                   {columns.map(col => (
+//                     <TableCell key={col.label}>{col.accessor(c)}</TableCell>
+//                   ))}
+//                 </TableRow>
+//               ))
+//             ) : (
+//               <TableRow>
+//                 <TableCell colSpan={columns.length} className="text-center">
+//                   No entries found for {selectedCategory}
+//                 </TableCell>
+//               </TableRow>
+//             )}
+//           </TableBody>
+//         </Table>
+//       </CardContent>
+//     </Card>
+//   );
+// };
 
 // Submitted Papers Component
 const SubmittedPaperComponent = () => {

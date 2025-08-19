@@ -9,7 +9,6 @@ export interface IConference extends Document {
   conferenceTitle: string;
   conferenceEmail: string;
   conferenceAnyOtherInformation: string;
-  // conferenceSubmittedPapers: mongoose.Types.ObjectId[];
   conferenceAcronym: string;
   conferenceWebpage: string;
   conferenceVenue: string;
@@ -56,12 +55,11 @@ const ConferenceSchema: Schema<IConference> = new Schema({
   conferenceTitle: { type: String, required: true },
   conferenceEmail: { type: String, required: true },
   conferenceAnyOtherInformation: { type: String, required: false },
-  // conferenceSubmittedPapers: [{ type: Schema.Types.ObjectId, ref: 'Paper' }],
   conferenceAcronym: { type: String, required: true },
-  conferenceWebpage: { type: String},//required: true 
-  conferenceVenue: { type: String},//required: true 
-  conferenceCity: { type: String},//required: true 
-  conferenceCountry: { type: String},//required: true 
+  conferenceWebpage: { type: String},
+  conferenceVenue: { type: String},
+  conferenceCity: { type: String}, 
+  conferenceCountry: { type: String},
   conferenceEstimatedNumberOfSubmissions: { type: Number },
   conferenceFirstDay: { type: Date },
   conferenceLastDay: { type: Date, required: true },
