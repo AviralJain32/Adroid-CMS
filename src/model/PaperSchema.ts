@@ -5,10 +5,16 @@ export interface IPaper extends Document {
   paperAuthor:  {
     email: string;
     userId?: mongoose.Types.ObjectId;
+    name: string;
+    affilation: string;
+    country: string;
   }[];
   correspondingAuthor: {
     email: string;
     userId?: mongoose.Types.ObjectId;
+    name: string;
+    affilation: string;
+    country: string;
   }[];
   paperTitle: string;
   paperFile: string;
@@ -50,7 +56,16 @@ const PaperSchema: Schema<IPaper> = new Schema(
         userId: {
           type: Schema.Types.ObjectId,
           ref: 'User',
-        }
+        },
+        affilation: {
+          type: String,
+          required: true,
+        },
+        country: {
+          type: String,
+          required: true,
+          default: 'India',
+        },
       },
     ],
     correspondingAuthor: [
@@ -65,7 +80,16 @@ const PaperSchema: Schema<IPaper> = new Schema(
         userId: {
           type: Schema.Types.ObjectId,
           ref: 'User',
-        }
+        },
+        affilation: {
+          type: String,
+          required: true,
+        },
+        country: {
+          type: String,
+          required: true,
+          default: 'India',
+        },
       },
     ],    
     paperTitle: {

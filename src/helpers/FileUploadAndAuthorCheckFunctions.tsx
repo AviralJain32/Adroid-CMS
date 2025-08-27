@@ -37,8 +37,8 @@ export async function handleFileUpload(paperFile: File,paperID:string,conference
 interface paperAuthorType {
   name:string,
   email: string;
-  Country: string;
-  Affiliation: string;
+  country: string;
+  affiliation: string;
   WebPage: string;
   isCorrespondingAuthor: boolean;
 }
@@ -54,29 +54,24 @@ export async function validateAuthors(paperAuthorsArray: paperAuthorType[],paper
         const User = await UserModel.findOne({
           $and: [{ email: paperAuthor.email }, { isVerified: true }],
         });
-        // if (!User) {
-        //   ErrorOfNotGettingUser.push({
-        //     success: false,
-        //     message: `The author ${paperAuthor.FirstName} ${paperAuthor.LastName} with the email id ${paperAuthor.email} is not registered in our system. Please ensure the author creates an account on our platform before adding them as a paper author.`,
-        //   });
-        // }
+        
         if (paperAuthor.isCorrespondingAuthor) {
-          const AuthorObj:any={email:paperAuthor.email,name:paperAuthor.name}
+          const AuthorObj:any={email:paperAuthor.email,name:paperAuthor.name,affilation:paperAuthor.affiliation,country:paperAuthor.country}
           if(User?._id){
             AuthorObj["userId"]=User?._id
           }
           CorrespondingAuthors.push(AuthorObj);
         } else {
-          const AuthorObj:any={email:paperAuthor.email,name:paperAuthor.name}
+          const AuthorObj:any={email:paperAuthor.email,name:paperAuthor.name,affilation:paperAuthor.affiliation,country:paperAuthor.country}
           if(User?._id){
             AuthorObj["userId"]=User?._id
           }
           Authors.push(AuthorObj);
         }
         
-        if(!User?._id){
-          sendEmailToAuthorForLogin(paperAuthor.email,paperAuthor.isCorrespondingAuthor,paperTitle)
-        }
+        // if(!User?._id){
+        //   sendEmailToAuthorForLogin(paperAuthor.email,paperAuthor.isCorrespondingAuthor,paperTitle)
+        // }
       } catch (error) {
         console.log(error)
       }
@@ -84,10 +79,8 @@ export async function validateAuthors(paperAuthorsArray: paperAuthorType[],paper
   );
 
   await Promise.all(authorChecks);
-
-  // if (ErrorOfNotGettingUser.length !== 0) {
-  //   throw new Error(ErrorOfNotGettingUser[0].message);
-  // }
+  console.log("Authors:", Authors);
+  console.log("Corresponding Authors:", CorrespondingAuthors);
 
   return { Authors, CorrespondingAuthors };
 }

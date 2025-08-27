@@ -189,8 +189,8 @@ const Page = () => {
                 <TableCell>{author.userId ? <Badge variant={'accepted'}>Verified User</Badge>:<Badge variant={'submitted'}>Unverified User</Badge>}</TableCell>
                 <TableCell className="font-medium">{author.name || author.userId?.fullname }</TableCell>
                 <TableCell>{author.email}</TableCell>
-                <TableCell>{author.userId?.country || "-"}</TableCell>
-                <TableCell>{author.userId?.affilation || "-"}</TableCell>
+                <TableCell>{author.country || author.userId?.country }</TableCell>
+                <TableCell>{author.affilation || author.userId?.affilation }</TableCell>
                 {/* <TableCell>
                   <a
                     href={author.webpage}

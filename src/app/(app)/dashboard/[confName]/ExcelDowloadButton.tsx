@@ -8,8 +8,8 @@ import moment from 'moment';
 const DownloadExcelButton = ({ papers }: { papers: SubmittedPaper[] }) => {
   const getAuthorDetails = (authors: any[]) => {
     const names = authors.map(author => author.userId?.fullname || author.name).join(', ');
-    const emails = authors.map(author => author.userId?.email || 'N/A').join(', ');
-    const affiliations = authors.map(author => author.userId?.affiliation || author.affiliation || 'N/A').join(', ');
+    const emails = authors.map(author => author.userId?.email || author.email || 'N/A').join(', ');
+    const affiliations = authors.map(author => author.userId?.affiliation || author.affilation || 'N/A').join(', ');
     return { names, emails, affiliations };
   };
 

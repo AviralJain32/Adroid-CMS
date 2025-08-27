@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
   const paperFile = formData.get('paperFile') as File;
   const paperAuthors = formData.get('paperAuthors') as string;
   const paperAuthorsArray = JSON.parse(paperAuthors);
+  console.log("in submit paper route yeri paper authors array",paperAuthorsArray)
 
   if (!paperFile) {
     return NextResponse.json(

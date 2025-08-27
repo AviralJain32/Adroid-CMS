@@ -247,6 +247,30 @@ useEffect(() => {
                         </FormItem>
                       )}
                     />
+                    {/* Author Affiliation */}
+                    <FormField
+                      name={`paperAuthors.${index}.affiliation`}
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Affiliation</FormLabel>
+                          <Input {...field} placeholder="Enter author affiliation" />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* Author Country */}
+                    <FormField
+                      name={`paperAuthors.${index}.country`}
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Country</FormLabel>
+                          <Input {...field} placeholder="Enter author's country" />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     {/* Corresponding Author Checkbox */}
                     <FormField
                       name={`paperAuthors.${index}.isCorrespondingAuthor`}
@@ -263,6 +287,7 @@ useEffect(() => {
                         </FormItem>
                       )}
                     />
+                    
                     <Button
                       type="button"
                       variant="destructive"
@@ -281,6 +306,8 @@ useEffect(() => {
                       email: '',
                       name:"",
                       isCorrespondingAuthor: false,
+                      affiliation:"",
+                      country: "",
                     })
                   }
                 >

@@ -4,10 +4,10 @@ import { z } from 'zod';
 export const conferenceCategoryValues = [
   'Conference',
   'Book',
-  'Used for teaching',
-  'Journal',
-  'Conference proceedings',
-  'Processing applications',
+  // 'Used for teaching',
+  // 'Journal',
+  // 'Conference proceedings',
+  // 'Processing applications',
 ] as const;
 // Define the conference creation schema
 const conferenceSchema = z
