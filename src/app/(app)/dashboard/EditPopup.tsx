@@ -57,7 +57,6 @@ const EditPopup = ({
     ...author,
     isCorrespondingAuthor: true,
   }));
-  console.log(CorrespondingAuthors);
 
   const params = useParams<{ confAcronym: string }>();
   const router = useRouter();
@@ -251,6 +250,30 @@ const EditPopup = ({
                             </FormItem>
                           )}
                         />
+                        {/* Author Affiliation */}
+                        <FormField
+                          name={`paperAuthors.${index}.affiliation`}
+                          control={form.control}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Affiliation</FormLabel>
+                              <Input {...field} placeholder="Enter author affiliation" />
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        {/* Author Country */}
+                        <FormField
+                          name={`paperAuthors.${index}.country`}
+                          control={form.control}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Country</FormLabel>
+                              <Input {...field} placeholder="Enter author's country" />
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                         {/* <FormField
                           name={`paperAuthors.${index}.Country`}
                           control={form.control}
@@ -301,6 +324,7 @@ const EditPopup = ({
                             </FormItem>
                           )}
                         />
+                        
                         <Button
                           type="button"
                           variant="outline"
@@ -315,9 +339,11 @@ const EditPopup = ({
                       variant="ghost"
                       onClick={() =>
                         append({
-                          name:"",
-                          email: '',
-                          isCorrespondingAuthor: false,
+                         email: '',
+                        name:"",
+                        isCorrespondingAuthor: false,
+                        affiliation:"",
+                        country: "",
                         })
                       }
                     >
