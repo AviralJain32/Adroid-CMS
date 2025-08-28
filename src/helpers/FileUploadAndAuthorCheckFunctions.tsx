@@ -69,9 +69,9 @@ export async function validateAuthors(paperAuthorsArray: paperAuthorType[],paper
           Authors.push(AuthorObj);
         }
         
-        // if(!User?._id){
-        //   sendEmailToAuthorForLogin(paperAuthor.email,paperAuthor.isCorrespondingAuthor,paperTitle)
-        // }
+        if(!User?._id){
+          sendEmailToAuthorForLogin(paperAuthor.email,paperAuthor.isCorrespondingAuthor,paperTitle)
+        }
       } catch (error) {
         console.log(error)
       }

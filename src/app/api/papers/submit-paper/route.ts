@@ -9,6 +9,8 @@ import {
   handleFileUpload,
   validateAuthors
 } from '@/helpers/FileUploadAndAuthorCheckFunctions';
+import { sendConfirmationEmailAfterSubmissionOfPaper } from '@/helpers/confirmationEmailAfterSubmissionOfPaper';
+import moment from 'moment';
 
 
 export async function POST(request: NextRequest) {
@@ -83,6 +85,21 @@ export async function POST(request: NextRequest) {
     });
 
     newPaper.save();
+    
+    // Use moment to format date and time
+    const submissionDate = moment(newPaper.paperSubmissionDate).format('DD MMM YYYY');
+    const submissionTime = moment(newPaper.paperSubmissionDate).format('hh:mm A');
+
+    const authorsEmail=[...Authors.map((author:any)=>({email:author.email,name:author.name})),...CorrespondingAuthors.map((author:any)=>({email:author.email,name:author.name}))]
+    
+    sendConfirmationEmailAfterSubmissionOfPaper(
+      conference,      // conference object
+      paperID,               // paper ID
+      paperTitle,            // paper title
+      authorsEmail,          // all authors
+      submissionDate,        // formatted date
+      submissionTime         // formatted time
+    );
 
     return NextResponse.json({
       success: true,
