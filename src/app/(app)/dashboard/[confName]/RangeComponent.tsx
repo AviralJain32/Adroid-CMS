@@ -3,14 +3,12 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import * as z from 'zod';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -25,7 +23,7 @@ import {
 import { SubmittedPaper } from '@/types/SubmittedPaperType';
 import { useState } from 'react';
 
-// Define validation schema using Zod for multiple ranges
+// ✅ Validation Schema
 const downloadRangeSchema = z.object({
   ranges: z.array(
     z
@@ -52,12 +50,19 @@ const downloadRangeSchema = z.object({
 
 type DownloadRangeFormData = z.infer<typeof downloadRangeSchema>;
 
-interface PaperType {
+interface PaperSelectorProps {
   papers: SubmittedPaper[];
-  downloadPaperFunction: (file: string) => void;
+  onPapersSelected: (papers: SubmittedPaper[]) => void;
+  open: boolean;                        // ✅ controlled prop
+  onOpenChange: (open: boolean) => void; // ✅ controlled prop
 }
 
-export function DownloadPapers({ papers, downloadPaperFunction }: PaperType) {
+export function PaperRangeSelector({
+  papers,
+  onPapersSelected,
+  open,
+  onOpenChange,
+}: PaperSelectorProps) {
   const [availablePapers, setAvailablePapers] = useState<SubmittedPaper[]>([]);
 
   const form = useForm<DownloadRangeFormData>({
@@ -67,63 +72,47 @@ export function DownloadPapers({ papers, downloadPaperFunction }: PaperType) {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({ 
     control: form.control,
     name: 'ranges',
   });
 
-  // Function to check if papers are downloadable based on the entered ranges
-  const checkDownloadablePapers = (
+  // ✅ Core filter function
+  const getPapersInRange = (
     ranges: DownloadRangeFormData['ranges'],
     papers: SubmittedPaper[],
   ) => {
-    const downloadablePapers = papers.filter(paper => {
-      const paperId = parseInt(paper.paperID.split('-').pop()!); // Extract the numeric ID from 'aviral-1234-1'
+    return papers.filter(paper => {
+      const paperId = parseInt(paper.paperID.split('-').pop()!);
       return ranges.some(
         range => paperId >= range.lowerRange && paperId <= range.upperRange,
       );
     });
-    setAvailablePapers(downloadablePapers);
   };
 
-  // Function to download papers based on the entered ranges
-  const downloadBulkPapers = (ranges: DownloadRangeFormData['ranges']) => {
-    const downloadablePapers = papers.filter(paper => {
-      const paperId = parseInt(paper.paperID.split('-').pop()!); // Extract the numeric ID from 'aviral-1234-1'
-      return ranges.some(
-        range => paperId >= range.lowerRange && paperId <= range.upperRange,
-      );
-    });
-
-    // Trigger the download function for each paper
-    downloadablePapers.forEach(paper => {
-      downloadPaperFunction(paper.paperFile);
-    });
+  const onCheck = (data: DownloadRangeFormData) => {
+    const filtered = getPapersInRange(data.ranges, papers);
+    setAvailablePapers(filtered);
   };
 
-  const onSubmit = (data: DownloadRangeFormData) => {
-    checkDownloadablePapers(data.ranges, papers);
+  const onConfirm = (data: DownloadRangeFormData) => {
+    const filtered = getPapersInRange(data.ranges, papers);
+    onPapersSelected(filtered); // ✅ Give back sanitized list
+    onOpenChange(false);        // ✅ close after confirm
   };
 
-  const onContinue = (data: DownloadRangeFormData) => {
-    downloadBulkPapers(data.ranges);
-  };
-
+  
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline">Download Papers</Button>
-      </AlertDialogTrigger>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onConfirm)} className="space-y-6">
             <AlertDialogHeader>
               <AlertDialogTitle>
-                Enter the range of papers you want to download
+                Enter the range of papers you want to select
               </AlertDialogTitle>
               <AlertDialogDescription>
-                Provide multiple ranges of paper numbers to download (e.g.,
-                1-10, 15-30).
+                Provide multiple ranges of paper numbers (e.g., 1-10, 15-30).
               </AlertDialogDescription>
             </AlertDialogHeader>
 
@@ -137,11 +126,7 @@ export function DownloadPapers({ papers, downloadPaperFunction }: PaperType) {
                     <FormItem>
                       <FormLabel>From (Lower Range)</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          type="number"
-                          placeholder="Enter lower range"
-                        />
+                        <Input {...field} type="number" placeholder="Enter lower range" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -154,11 +139,7 @@ export function DownloadPapers({ papers, downloadPaperFunction }: PaperType) {
                     <FormItem>
                       <FormLabel>To (Upper Range)</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          type="number"
-                          placeholder="Enter upper range"
-                        />
+                        <Input {...field} type="number" placeholder="Enter upper range" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -188,28 +169,26 @@ export function DownloadPapers({ papers, downloadPaperFunction }: PaperType) {
               Add Range
             </Button>
 
-            {/* Button to trigger the check */}
+            {/* Check Available Papers */}
             <Button
               type="button"
-              onClick={form.handleSubmit(onSubmit)}
+              onClick={form.handleSubmit(onCheck)}
               variant="outline"
             >
               Check Available Papers
             </Button>
 
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <Button type="submit" onClick={form.handleSubmit(onContinue)}>
-                Download Papers
-              </Button>
+              <AlertDialogCancel onClick={() => onOpenChange(false)}>Cancel</AlertDialogCancel>
+              <Button type="submit">Confirm Selection</Button>
             </AlertDialogFooter>
           </form>
         </Form>
 
-        {/* Display available papers */}
+        {/* Preview Available Papers */}
         {availablePapers.length > 0 ? (
           <div className="mt-4">
-            <h3 className="font-bold">Available Papers for Download:</h3>
+            <h3 className="font-bold">Available Papers:</h3>
             <ul className="list-disc list-inside">
               {availablePapers.map(paper => (
                 <li key={paper.paperID}>Paper ID: {paper.paperID}</li>
@@ -217,7 +196,7 @@ export function DownloadPapers({ papers, downloadPaperFunction }: PaperType) {
             </ul>
           </div>
         ) : (
-          <div>No paper is available in these ranges</div>
+          <div>No papers in these ranges</div>
         )}
       </AlertDialogContent>
     </AlertDialog>

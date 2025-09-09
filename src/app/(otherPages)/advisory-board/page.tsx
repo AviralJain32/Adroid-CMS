@@ -3,6 +3,11 @@ import React from 'react'
 const page = () => {
     const advisoryBoardMembers = [
         {
+          name: "Aditya Gupta",
+          designation: "Software Development Engineer II",
+          organization: "Amazon Web Services",
+        },
+        {
           name: "Prasanalakshmi B",
           designation: "Research Professor, Department of Computer Science",
           organization: "College of Computer Science, King Khalid University, Abha 62223, Saudi Arabia",

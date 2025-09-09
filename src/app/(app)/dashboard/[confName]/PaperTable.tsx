@@ -44,6 +44,7 @@ import { DeletePapers } from './DeletePapers';
 import { DownloadPapers } from './DownloadBulkPapers';
 import { useForm } from 'react-hook-form';
 import DownloadExcelButton from '@/app/(app)/dashboard/[confName]/ExcelDowloadButton';
+import { PaperRangeSelector } from './RangeComponent';
 
 interface PaperTableProps {
   data: SubmittedPaper[];
@@ -56,7 +57,6 @@ const PaperTable: React.FC<PaperTableProps> = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-  console.log(pathname);
 
   const DownloadFile = (file: string) => {
     try {
@@ -236,6 +236,7 @@ const PaperTable: React.FC<PaperTableProps> = ({
   ) => {
     return !ispaidSecurityAmountof2000 && paperIndex >= 100;
   };
+  const [open, setOpen] = useState(false)
 
   return (
     <div>
@@ -292,12 +293,26 @@ const PaperTable: React.FC<PaperTableProps> = ({
             ]}
           />
 
-          <DownloadPapers
+          {/* <DownloadPapers
             papers={[
               ...table.getFilteredRowModel().rows.map(row => row.original),
             ]}
             downloadPaperFunction={DownloadFile}
-          />
+          /> */}
+          <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+            Download Paper with Range
+          </Button>
+          {open && <PaperRangeSelector
+            open={open}
+            onOpenChange={setOpen}
+            papers={[
+              ...table.getFilteredRowModel().rows.map(row => row.original),
+            ]}
+            onPapersSelected={(selectedPapers) => {
+              // Option 2: Bulk Download
+              selectedPapers.forEach(p => DownloadFile(p.paperFile));
+            }}
+          />}
           <DownloadExcelButton papers={[
               ...table.getFilteredRowModel().rows.map(row => row.original),
             ]} />
@@ -325,8 +340,8 @@ const PaperTable: React.FC<PaperTableProps> = ({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, index) => (
+            {table.getPaginationRowModel().rows?.length ? (
+              table.getPaginationRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
