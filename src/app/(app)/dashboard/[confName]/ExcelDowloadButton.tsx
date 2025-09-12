@@ -23,10 +23,11 @@ const DownloadExcelButton = ({ papers }: { papers: SubmittedPaper[] }) => {
     return { names, emails, affiliations };
   };
 
-  const sanitizedPapers = papers.map((paper: SubmittedPaper) => {
-    const submissionDate = moment(paper.paperSubmissionDate).format('MMMM Do YYYY, h:mm:ss a');
-    const correspondingAuthors = getAuthorDetails(paper.correspondingAuthor);
-    const allAuthors = getAuthorDetails(paper.paperAuthor);
+  const sanitizedPapers = (papers: SubmittedPaper[]) => {
+    return papers.map(paper => {
+      const submissionDate = moment(paper.paperSubmissionDate).format('MMMM Do YYYY, h:mm:ss a');
+      const correspondingAuthors = getAuthorDetails(paper.correspondingAuthor);
+      const allAuthors = getAuthorDetails(paper.paperAuthor);
 
     return {
       Timestamp: submissionDate,
@@ -41,12 +42,13 @@ const DownloadExcelButton = ({ papers }: { papers: SubmittedPaper[] }) => {
       AllAuthorEmails: allAuthors.emails,
       AllAuthorAffiliations: allAuthors.affiliations,
     };
-  });
+    })
+  };
 
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleDownload = () => {
-    exportToExcel(sanitizedPapers, 'conference_papers');
+    exportToExcel(sanitizedPapers(papers), 'conference_papers');
   };
 
   return (
@@ -79,7 +81,7 @@ const DownloadExcelButton = ({ papers }: { papers: SubmittedPaper[] }) => {
           open={modalOpen}
           onOpenChange={setModalOpen}
           onPapersSelected={(selectedPapers) => {
-            exportToExcel(selectedPapers);
+            exportToExcel(sanitizedPapers(selectedPapers), 'conference_papers');
           }}
         />
       )}

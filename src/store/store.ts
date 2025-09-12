@@ -3,6 +3,7 @@ import { ConferenceApiSlice } from './features/ConferenceApiSlice';
 import { PaperApiSlice } from './features/PaperApiSlice';
 import { ConferenceDashboardPaperSlice } from './features/ConferenceDashboardPaperSlice';
 import socketReducer from "@/store/features/videoCalling/SocketSlice"
+import { reviewerApiSlice } from './features/ReviewerApiSlice';
 export const makeStore = () => {
   return configureStore({
     reducer: {
@@ -11,7 +12,7 @@ export const makeStore = () => {
       [PaperApiSlice.reducerPath]: PaperApiSlice.reducer,
       [ConferenceDashboardPaperSlice.reducerPath]:
         ConferenceDashboardPaperSlice.reducer,
-      
+      [reviewerApiSlice.reducerPath]: reviewerApiSlice.reducer,
 
         //vc reducers
         socket: socketReducer,
@@ -21,6 +22,7 @@ export const makeStore = () => {
         ConferenceApiSlice.middleware,
         PaperApiSlice.middleware,
         ConferenceDashboardPaperSlice.middleware,
+        reviewerApiSlice.middleware,
       ),
   });
 };
