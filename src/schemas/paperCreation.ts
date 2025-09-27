@@ -20,7 +20,7 @@ const paperSubmissionSchema = z.object({
       country: z.string().min(1, "Country is required"),
       affiliation: z.string().min(3, "Affiliation should be at least 3 characters"),
       // WebPage: z.string().url("Invalid URL").optional(),
-      isCorrespondingAuthor: z.boolean(),
+      isCorrespondingAuthor: z.coerce.boolean().default(false),
     }),
   ),
 });
