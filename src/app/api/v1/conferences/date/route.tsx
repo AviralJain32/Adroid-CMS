@@ -1,50 +1,42 @@
+// i think it is a extra route that we do not need
 import dbConnect from '@/lib/dbConnect';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/options';
 import ConferenceModel from '@/model/Conference';
 
 export async function GET(request: Request) {
   await dbConnect();
-
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user) {
-    return new Response(
-      JSON.stringify({
-        success: false,
-        message: 'Not Authenticated',
-      }),
-      { status: 401 },
-    );
-  }
   try {
     const { searchParams } = new URL(request.url);
     const queryParams = {
       confName: searchParams.get('confName'),
     };
+    console.log("ye route chlkra")
+    console.log(queryParams.confName)
 
-    const getConferenceDetails = await ConferenceModel.findOne({
+    const getConferenceDate = await ConferenceModel.findOne({
       conferenceAcronym: queryParams.confName,
-    }).limit(100);
+    }).select("conferenceSubmissionsDeadlineDate");
+    console.log(getConferenceDate)
 
-    if (!getConferenceDetails) {
+
+    if (!getConferenceDate) {
       return new Response(
         JSON.stringify({
           success: false,
-          message: 'conference Details not found',
+          message: 'Conference Date not found , maybe conference do not exist',
         }),
         { status: 500 },
       );
     }
 
     return new Response(
-      JSON.stringify({
-        success: true,
-        message: 'Conference Details Found by conference id',
-        data: { getConferenceDetails },
-      }),
-      { status: 200 },
-    );
+        JSON.stringify({
+            success: true,
+            message: 'conference submission Date found for the conference',
+            data: { getConferenceDate},
+        }),
+        { status: 200 },
+        );
+        
   } catch (error) {
     console.log('An unexpected error occurred: ', error);
     return new Response(

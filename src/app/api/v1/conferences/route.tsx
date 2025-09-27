@@ -1,3 +1,5 @@
+// For smart Sub feature
+
 import dbConnect from '@/lib/dbConnect';
 import ConferenceModel from '@/model/Conference';
 

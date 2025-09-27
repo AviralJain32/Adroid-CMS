@@ -1,16 +1,15 @@
 import dbConnect from '@/lib/dbConnect';
 import ConferenceModel from '@/model/Conference';
 
-export async function GET(request: Request) {
+export async function GET(request: Request,
+      { params }: { params: { conferenceAcronym: string } }
+) {
   await dbConnect();
   try {
-    const { searchParams } = new URL(request.url);
-    const queryParams = {
-      conferenceAcronym: searchParams.get('conferenceAcronym'),
-    };
-    console.log(queryParams);
+   
+    const { conferenceAcronym } = params;
 
-    if (!queryParams.conferenceAcronym) {
+    if (!conferenceAcronym) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -22,7 +21,7 @@ export async function GET(request: Request) {
 
     // Find the conference by the provided ID
     const getConferenceDetails = await ConferenceModel.findOne({
-      conferenceAcronym: queryParams.conferenceAcronym,
+      conferenceAcronym: conferenceAcronym,
     }).populate('conferenceOrganizer', 'fullname');
 
     if (!getConferenceDetails) {
@@ -54,3 +53,4 @@ export async function GET(request: Request) {
     );
   }
 }
+

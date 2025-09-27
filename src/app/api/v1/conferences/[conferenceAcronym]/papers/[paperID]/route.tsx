@@ -1,10 +1,9 @@
-// done
 import dbConnect from '@/lib/dbConnect';
 import { getServerSession } from 'next-auth';
 import PaperModel from '@/model/PaperSchema';
-import { authOptions } from '../../auth/[...nextauth]/options';
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 
-export async function GET(request: Request) {
+export async function GET(request: Request,{ params }: { params: { paperID: string } }) {
   await dbConnect();
 
   const session = await getServerSession(authOptions);
@@ -19,13 +18,10 @@ export async function GET(request: Request) {
     );
   }
   try {
-    const { searchParams } = new URL(request.url);
-    const queryParams = {
-      paperID: searchParams.get('paperID'),
-    };
+    
 
     const getPaperDetails = await PaperModel.findOne({
-      paperID: queryParams.paperID,
+      paperID: params.paperID,
     })
       .populate({path:'paperAuthor.userId',select:'fullname country affilation'}) // Populating paper authors
       .populate({path:'correspondingAuthor.userId',select:'fullname country affilation'}) // Populating corresponding authors

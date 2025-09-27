@@ -39,11 +39,11 @@ type IModifiedConference = Omit<
 };
 export const ConferenceApiSlice = createApi({
   reducerPath: 'conferenceapi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1' }),
   tagTypes: ['conference'],
   endpoints: builder => ({
     getOrganizedConferences: builder.query<OrganizedConference[], void>({
-      query: () => `/get-conferences`,
+      query: () => `/users/me/conferences`,
       transformResponse: (
         response: ApiResponse<{ organizedConferences: OrganizedConference[] }>,
       ) => {
@@ -60,22 +60,22 @@ export const ConferenceApiSlice = createApi({
       z.infer<typeof conferenceSchema>
     >({
       query: newConference => ({
-        url: '/create-conference',
+        url: '/users/me/conferences',
         method: 'POST',
         body: newConference,
       }),
       invalidatesTags: ['conference'],
     }),
     updateConference: builder.mutation<ApiResponse<null>, updateType>({
-      query: ({ confAcronym, conferenceDetails }) => ({
-        url: `/edit-conference?confAcronym=${confAcronym}`,
+      query: ({ conferenceDetails }) => ({
+        url: `/users/me/conferences`,
         method: 'PUT',
         body: conferenceDetails,
       }),
       invalidatesTags: ['conference'],
     }),
     getAllAcceptedConferences: builder.query<IConference[], void>({
-      query: () => `/get-all-accepted-conferences`,
+      query: () => `/conferences`,
       transformResponse: (response: ApiResponse<IConference[]>) => {
         if (response.success) {
           return response.data;
@@ -85,8 +85,8 @@ export const ConferenceApiSlice = createApi({
       },
     }),
     getConferenceByConferenceID: builder.query<IModifiedConference, string>({
-      query: confName =>
-        `/get-conference-by-conference-id?confName=${confName}`,
+      query: conferenceAcronym =>
+        `v1/conferences/${conferenceAcronym}`,
       transformResponse: (response: ApiResponse<IModifiedConference>) => {
         if (response.success) {
           return response.data;

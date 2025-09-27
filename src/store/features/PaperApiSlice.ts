@@ -23,11 +23,11 @@ interface SubmittedPaper {
 
 export const PaperApiSlice = createApi({
   reducerPath: 'paperapi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1' }),
   tagTypes: ['paper'],
   endpoints: builder => ({
     getSubmittedPapers: builder.query<SubmittedPaper[], void>({
-      query: () => `/papers/get-submitted-papers`,
+      query: () => `/users/me/papers`,
       transformResponse: (
         response: ApiResponse<{ submittedPapers: SubmittedPaper[] }>,
       ) => {
@@ -45,7 +45,7 @@ export const PaperApiSlice = createApi({
       },
       string
     >({
-      query: confName => `/papers/get-conference-papers?confName=${confName}`,
+      query: confName => `/conferences/${confName}/papers`,
       transformResponse: (
         response: ApiResponse<{
           paperSubmittedInConference: SubmittedPaper[];
