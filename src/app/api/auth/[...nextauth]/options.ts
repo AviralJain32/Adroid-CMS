@@ -65,7 +65,6 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.AUTH_ORCID_ID,
       clientSecret: process.env.AUTH_ORCID_SECRET,
       profile(profile) {
-        console.log("ye ri orcid profile",profile);
         return {
           id: profile.sub,
           fullname: profile.given_name + ' ' + profile.family_name, // Modify based on what ORCID provides in the user info response
